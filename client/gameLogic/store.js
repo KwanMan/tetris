@@ -23,20 +23,22 @@ export default function createRedux () {
 }
 
 function reducer (prevState = {}, action) {
-  if (prevState.lastAction === 'LOST') return Object.assign({}, prevState)
+  return Object.assign({}, prevState, director(prevState, action))
+}
+
+function director (prevState = {}, action) {
+  if (prevState.lastAction === 'LOST') return
   switch (action.type) {
     case 'NEXT_TICK':
       if (prevState.liveTetrimino) {
-        return Object.assign({}, prevState, tryDropping(prevState))
+        return tryDropping(prevState)
       } else {
-        return Object.assign({}, prevState, introduceNewTetrimino(prevState))
+        return introduceNewTetrimino(prevState)
       }
     case 'USER_ACTION':
       if (prevState.liveTetrimino) {
-        return Object.assign({}, prevState, performAction(prevState, action.action))
+        return performAction(prevState, action.action)
       }
-    default:
-      return Object.assign({}, prevState)
   }
 }
 

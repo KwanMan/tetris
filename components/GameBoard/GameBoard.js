@@ -1,16 +1,6 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
 
 import GameRow from './GameRow'
-
-import './GameBoard.css'
-
-const mapStateToProps = (state) => {
-  const { shape } = state
-  return {
-    rows: shape
-  }
-}
 
 class GameBoard extends Component {
   render () {
@@ -24,8 +14,8 @@ class GameBoard extends Component {
   renderRows () {
     const { rows } = this.props
     if (!rows) return
-    return rows.map(row => <GameRow row={row} />)
+    return rows.map((row, i) => <GameRow row={row} key={i} />)
   }
 }
 
-export default connect(mapStateToProps)(GameBoard)
+export default GameBoard

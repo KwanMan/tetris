@@ -8,7 +8,12 @@ export default function Tetris () {
 
   store.subscribe(() => {
     const { board, liveTetrimino, score } = store.getState()
-    const shape = add([board, liveTetrimino]).visual()
+    let shape
+    if (liveTetrimino) {
+      shape = add([board, liveTetrimino]).visual()
+    } else {
+      shape = board.visual()
+    }
 
     newShapeListeners.forEach(listener => listener(shape))
     newScoreListeners.forEach(listener => listener(score))
@@ -22,7 +27,7 @@ export default function Tetris () {
   }
 
   function startGame () {
-    setInterval(() => store.dispatch({ type: 'NEXT_TICK' }), 100)
+    setInterval(() => store.dispatch({ type: 'NEXT_TICK' }), 300)
   }
 
   return {

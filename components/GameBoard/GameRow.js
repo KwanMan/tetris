@@ -4,7 +4,7 @@ import classnames from 'classnames'
 function GameRow ({ row }) {
   return (
     <div className='GameRow'>
-      {row.map(color => <Tetrimino color={color} />)}
+      {row.map((color, i) => <Tetrimino color={color} key={i} />)}
     </div>
   )
 }

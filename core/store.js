@@ -44,7 +44,6 @@ function director (prevState = {}, action) {
 
 function performAction (prevState, action) {
   const { liveTetrimino, board } = prevState
-  let next
   switch (action) {
     case 'LEFT':
       if (atLeft(liveTetrimino) || collides([board, leftOne(liveTetrimino)])) {
@@ -60,11 +59,11 @@ function performAction (prevState, action) {
 function tryDropping (prevState) {
   const { board, liveTetrimino } = prevState
   if (atBottom(liveTetrimino) || collides([board, downOne(liveTetrimino)])) {
-    const settledState = {
+    const settledState = Object.assign({}, prevState, {
       board: add([board, liveTetrimino]),
-      liveTetrimino: undefined,
+      liveTetrimino: false,
       lastAction: 'SETTLED'
-    }
+    })
     return checkCompleted(settledState)
   } else {
     return {

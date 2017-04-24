@@ -1,5 +1,4 @@
-import { flatten } from 'lodash'
-import { createArray, identity } from '../utils'
+import { createArray } from '../utils'
 import { BOARD_HEIGHT, BOARD_WIDTH } from './constants'
 
 export default function tetrix (inputShape, { invert } = {}) {

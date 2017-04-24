@@ -2,10 +2,9 @@ import { flatten } from 'lodash'
 import { createArray, identity } from '../utils'
 import { BOARD_HEIGHT, BOARD_WIDTH } from './constants'
 
-export default function tetrix (inputShape, invert) {
-  const shape = invert
-    ? flipVertical(getFullShape(centre(inputShape)))
-    : getFullShape(centre(inputShape))
+export default function tetrix (inputShape, { invert } = {}) {
+  const fullShape = getFullShape(inputShape)
+  const shape = invert ? flipVertical(fullShape) : fullShape
 
   const api = (y, x) => x !== undefined ? api.raw()[y][x] : api.raw()[y]
 
@@ -14,18 +13,20 @@ export default function tetrix (inputShape, invert) {
   api.raw = () => shape.map(row => row.slice(0))
 
   api.clone = () => tetrix(api.raw())
-  api.map = fn => tetrix(shape.map((row, y) => row.map((v, x) => fn(v, {x, y}))))
-  api.some = fn => shape.some((row, y) => row.some((v, x) => fn(v, {x, y})))
+  api.map = fn => tetrix(loopAll(shape, 'map')(fn))
+  api.some = loopAll(shape, 'some')
+  api.every = loopAll(shape, 'every')
   api.filterRows = fn => tetrix(shape.filter(fn))
 
-  api.scrub = (yTarget, xTarget) => api.map((value, {x, y}) => {
-    const match = yTarget === y && xTarget === x
-    return match ? false : value
-  })
-
-  api.isEmpty = () => !api.some(identity)
-
   return api
+}
+
+function loopAll (shape, method) {
+  return fn => shape[method]((row, y) => {
+    return row[method]((v, x) => {
+      return fn(v, {x, y})
+    })
+  })
 }
 
 function getFullShape (shape) {
@@ -41,14 +42,4 @@ function flipVertical (input) {
     memo.unshift(next)
     return memo
   }, [])
-}
-
-function centre (input) {
-  if (!input[0]) return input
-  const width = input[0].length
-  const left = Math.floor((BOARD_WIDTH - width) / 2)
-  const right = Math.ceil((BOARD_WIDTH - width) / 2)
-  return input.map(r => {
-    return flatten([createArray(false, left), r, createArray(false, right)])
-  })
 }

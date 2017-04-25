@@ -53,6 +53,14 @@ function performAction (prevState, action) {
     case 'RIGHT':
       if (atRight(liveTetrimino) || collides([board, rightOne(liveTetrimino)])) return
       return { liveTetrimino: rightOne(liveTetrimino) }
+    case 'DOWN':
+      return tryDropping(prevState)
+    case 'DROP':
+      let next = tryDropping(prevState)
+      while (next.lastAction !== 'SETTLED') {
+        next = tryDropping(next)
+      }
+      return next
   }
 }
 
@@ -66,10 +74,10 @@ function tryDropping (prevState) {
     })
     return checkCompleted(settledState)
   } else {
-    return {
+    return Object.assign({}, prevState, {
       liveTetrimino: downOne(liveTetrimino),
       lastAction: 'DROPPED_ONE'
-    }
+    })
   }
 }
 

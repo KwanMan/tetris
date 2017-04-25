@@ -6,8 +6,9 @@ import tetrix from '../../core/tetrix'
 import GameBoard from '../GameBoard'
 
 const keys = {
+  32: 'DROP', // Space
   37: 'LEFT',
-  38: 'UP',
+  38: 'ROTATE', // Up arrow
   39: 'RIGHT',
   40: 'DOWN'
 }

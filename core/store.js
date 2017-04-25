@@ -23,77 +23,8 @@ export default function createRedux () {
 }
 
 function reducer (prevState = {}, action) {
-  return Object.assign({}, prevState, director(prevState, action))
-}
-
-function director (prevState = {}, action) {
-  if (prevState.lastAction === 'LOST') return
-  switch (action.type) {
-    case 'NEXT_TICK':
-      if (prevState.liveTetrimino) {
-        return tryDropping(prevState)
-      } else {
-        return introduceNewTetrimino(prevState)
-      }
-    case 'USER_ACTION':
-      if (prevState.liveTetrimino) {
-        return performAction(prevState, action.action)
-      }
-  }
-}
-
-function performAction (prevState, action) {
-  const { liveTetrimino, board } = prevState
-  switch (action) {
-    case 'LEFT':
-      if (atLeft(liveTetrimino) || collides([board, leftOne(liveTetrimino)])) {
-        return
-      }
-      return { liveTetrimino: leftOne(liveTetrimino) }
-    case 'RIGHT':
-      if (atRight(liveTetrimino) || collides([board, rightOne(liveTetrimino)])) return
-      return { liveTetrimino: rightOne(liveTetrimino) }
-    case 'DOWN':
-      return tryDropping(prevState)
-    case 'DROP':
-      let next = tryDropping(prevState)
-      while (next.lastAction !== 'SETTLED') {
-        next = tryDropping(next)
-      }
-      return next
-  }
-}
-
-function tryDropping (prevState) {
-  const { board, liveTetrimino } = prevState
-  if (atBottom(liveTetrimino) || collides([board, downOne(liveTetrimino)])) {
-    const settledState = Object.assign({}, prevState, {
-      board: add([board, liveTetrimino]),
-      liveTetrimino: false,
-      lastAction: 'SETTLED'
-    })
-    return checkCompleted(settledState)
-  } else {
-    return Object.assign({}, prevState, {
-      liveTetrimino: downOne(liveTetrimino),
-      lastAction: 'DROPPED_ONE'
-    })
-  }
-}
-
-function introduceNewTetrimino (prevState) {
-  const { board } = prevState
-  const newTetrimino = tetriminos.getRandom()
-  if (collides([board, newTetrimino])) {
-    console.log('YOU LOST')
-    return {
-      lastAction: 'LOST'
-    }
-  }
-  return {
-    liveTetrimino: newTetrimino,
-    lastAction: 'NEW_TETRIMINO'
-  }
+  const nextState = Object.assign({}, prevState, director(prevState, action))
+  return checkCompleted(nextState)
 }
 
 function checkCompleted (prevState) {
@@ -102,4 +33,68 @@ function checkCompleted (prevState) {
     board: newTetrix,
     score: updateScore(prevState.score, removed)
   })
+}
+
+function director (prevState = {}, action) {
+  if (prevState.finished) return
+  switch (action.type) {
+    case 'NEXT_TICK':
+      if (prevState.liveTetrimino) {
+        return tryDown(prevState)
+      } else {
+        return introduceNewTetrimino(prevState)
+      }
+    case 'USER_ACTION':
+      if (!prevState.liveTetrimino) return
+      switch (action.action) {
+        case 'LEFT': return tryLeft(prevState)
+        case 'RIGHT': return tryRight(prevState)
+        case 'DOWN': return tryDown(prevState)
+        case 'DROP': return tryDrop(prevState)
+      }
+  }
+}
+
+function tryLeft ({ liveTetrimino, board }) {
+  if (atLeft(liveTetrimino) || collides([board, leftOne(liveTetrimino)])) return
+  return { liveTetrimino: leftOne(liveTetrimino) }
+}
+
+function tryRight ({ liveTetrimino, board }) {
+  if (atRight(liveTetrimino) || collides([board, rightOne(liveTetrimino)])) return
+  return { liveTetrimino: rightOne(liveTetrimino) }
+}
+
+function tryDown ({ board, liveTetrimino }) {
+  if (atBottom(liveTetrimino) || collides([board, downOne(liveTetrimino)])) {
+    return {
+      board: add([board, liveTetrimino]),
+      liveTetrimino: false
+    }
+  } else {
+    return {
+      liveTetrimino: downOne(liveTetrimino)
+    }
+  }
+}
+
+function tryDrop (prevState) {
+  let next = prevState
+  do {
+    next = Object.assign({}, prevState, tryDown(next))
+  } while (next.liveTetrimino)
+  return next
+}
+
+function introduceNewTetrimino ({ board }) {
+  const newTetrimino = tetriminos.getRandom()
+  if (collides([board, newTetrimino])) {
+    console.log('YOU LOST')
+    return {
+      finished: true
+    }
+  }
+  return {
+    liveTetrimino: newTetrimino
+  }
 }

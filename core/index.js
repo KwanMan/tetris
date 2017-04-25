@@ -5,6 +5,7 @@ export default function Tetris () {
   const store = createStore()
   const newShapeListeners = []
   const newScoreListeners = []
+  let interval
 
   store.subscribe(() => {
     const { board, liveTetrimino, score } = store.getState()
@@ -27,13 +28,19 @@ export default function Tetris () {
   }
 
   function startGame () {
-    setInterval(() => store.dispatch({ type: 'NEXT_TICK' }), 300)
+    interval = setInterval(() => store.dispatch({ type: 'NEXT_TICK' }), 300)
+  }
+
+  function stopGame () {
+    clearInterval(interval)
+    interval = null
   }
 
   return {
     onNewShape: (listener) => newShapeListeners.push(listener),
     onNewScore: (listener) => newScoreListeners.push(listener),
     userAction,
-    startGame
+    startGame,
+    stopGame
   }
 }

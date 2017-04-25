@@ -20,6 +20,7 @@ class Tetris extends Component {
       shape: tetrix([]).raw()
     }
   }
+
   componentDidMount () {
     const tetris = TetrisCore()
     tetris.onNewScore(score => this.setState({ score }))
@@ -32,9 +33,15 @@ class Tetris extends Component {
         tetris.userAction(keys[code])
       }
     }
-    window.tetris = tetris
+
     tetris.startGame()
+    this.tetris = tetris
   }
+
+  componentWillUnmount () {
+    this.tetris.stopGame()
+  }
+
   render () {
     const { shape } = this.state
     return (

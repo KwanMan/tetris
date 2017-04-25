@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import Tetris from '../../core'
+import TetrisCore from '../../core'
 import tetrix from '../../core/tetrix'
 
 import GameBoard from '../GameBoard'
@@ -12,7 +12,7 @@ const keys = {
   40: 'DOWN'
 }
 
-class Application extends Component {
+class Tetris extends Component {
   constructor () {
     super()
     this.state = {
@@ -21,7 +21,7 @@ class Application extends Component {
     }
   }
   componentDidMount () {
-    const tetris = Tetris()
+    const tetris = TetrisCore()
     tetris.onNewScore(score => this.setState({ score }))
     tetris.onNewShape(shape => this.setState({ shape }))
 
@@ -43,4 +43,4 @@ class Application extends Component {
   }
 }
 
-export default Application
+export default Tetris

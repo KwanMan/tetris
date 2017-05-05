@@ -1,51 +1,28 @@
-import { flatten } from 'lodash'
-
 import tetrix from './tetrix'
-import { pickRandom, createArray } from '../utils'
+import { pickRandom } from '../utils'
 import { BOARD_HEIGHT, BOARD_WIDTH } from './constants'
 
-const SHAPES = [
-  [[1, 1, 1, 1]],
-  [
-    [1, 1, 1],
-    [0, 0, 1]
-  ],
-  [
-    [1, 1, 1],
-    [1, 0, 0]
-  ],
-  [
-    [1, 1, 0],
-    [0, 1, 1]
-  ],
-  [
-    [0, 1, 1],
-    [1, 1, 0]
-  ],
-  [
-    [1, 1, 1],
-    [0, 1, 0]
-  ],
-  [
-    [1, 1],
-    [1, 1]
-  ]
+const TETRIMINOS = [
+  // I
+  [[-1, 0], [0, 0], [1, 0], [2, 0]],
+  // L
+  [[-1, 0], [0, 0], [1, 0], [1, 1]],
+  // J
+  [[-1, 1], [-1, 0], [0, 0], [1, 0]],
+  // S
+  [[-1, 0], [0, 0], [0, 1], [1, 1]],
+  // Z
+  [[-1, 1], [0, 1], [0, 0], [1, 0]],
+  // O
+  [[0, 1], [1, 1], [0, 0], [1, 0]]
 ]
 
 const COLOURS = ['blue', 'red', 'yellow', 'green', 'orange', 'grey', 'pink']
 
-export function getRandom () {
-  const shape = pickRandom(SHAPES)
-  const colour = pickRandom(COLOURS)
-  return tetrix(centre(shape), { invert: true }).map(v => v ? colour : false)
-}
+const location = [Math.floor(BOARD_WIDTH / 2), BOARD_HEIGHT - 1]
 
-function centre (input) {
-  if (!input[0]) return input
-  const width = input[0].length
-  const left = Math.floor((BOARD_WIDTH - width) / 2)
-  const right = Math.ceil((BOARD_WIDTH - width) / 2)
-  return input.map(r => {
-    return flatten([createArray(false, left), r, createArray(false, right)])
-  })
+export function getRandom () {
+  const coords = pickRandom(TETRIMINOS)
+  const colour = pickRandom(COLOURS)
+  return tetrix(coords, location, colour)
 }

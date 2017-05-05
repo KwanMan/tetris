@@ -1,38 +1,18 @@
 import { createStore } from 'redux'
 
-import tetrix from './tetrix'
+import board from './board'
 import * as tetriminos from './tetriminos'
-import { updateScore } from './scoring'
-import {
-  atLeft,
-  atRight,
-  atBottom,
-  leftOne,
-  rightOne,
-  downOne,
-  collides,
-  add,
-  removeCompleted
-} from './tetrixUtils'
 
 export default function createRedux () {
   return createStore(reducer, {
-    board: tetrix([]),
+    board: board(),
+    liveTetrimino: false,
     score: 0
   })
 }
 
 function reducer (prevState = {}, action) {
-  const nextState = Object.assign({}, prevState, director(prevState, action))
-  return checkCompleted(nextState)
-}
-
-function checkCompleted (prevState) {
-  const { newTetrix, removed } = removeCompleted(prevState.board)
-  return Object.assign({}, prevState, {
-    board: newTetrix,
-    score: updateScore(prevState.score, removed)
-  })
+  return Object.assign({}, prevState, director(prevState, action))
 }
 
 function director (prevState = {}, action) {
@@ -55,27 +35,27 @@ function director (prevState = {}, action) {
   }
 }
 
-function tryLeft ({ liveTetrimino, board }) {
-  if (atLeft(liveTetrimino) || collides([board, leftOne(liveTetrimino)])) return
-  return { liveTetrimino: leftOne(liveTetrimino) }
+function tryLeft ({ board, liveTetrimino }) {
+  const next = liveTetrimino.left()
+  if (liveTetrimino.atLeft() || board.clashesWith(next)) return
+  return { liveTetrimino: next }
 }
 
-function tryRight ({ liveTetrimino, board }) {
-  if (atRight(liveTetrimino) || collides([board, rightOne(liveTetrimino)])) return
-  return { liveTetrimino: rightOne(liveTetrimino) }
+function tryRight ({ board, liveTetrimino }) {
+  const next = liveTetrimino.right()
+  if (liveTetrimino.atRight() || board.clashesWith(next)) return
+  return { liveTetrimino: next }
 }
 
 function tryDown ({ board, liveTetrimino }) {
-  if (atBottom(liveTetrimino) || collides([board, downOne(liveTetrimino)])) {
+  const next = liveTetrimino.down()
+  if (liveTetrimino.atBottom() || board.clashesWith(next)) {
     return {
-      board: add([board, liveTetrimino]),
+      board: board.add(liveTetrimino),
       liveTetrimino: false
     }
-  } else {
-    return {
-      liveTetrimino: downOne(liveTetrimino)
-    }
   }
+  return { liveTetrimino: next }
 }
 
 function tryDrop (prevState) {
@@ -88,7 +68,7 @@ function tryDrop (prevState) {
 
 function introduceNewTetrimino ({ board }) {
   const newTetrimino = tetriminos.getRandom()
-  if (collides([board, newTetrimino])) {
+  if (board.clashesWith(newTetrimino)) {
     console.log('YOU LOST')
     return {
       finished: true

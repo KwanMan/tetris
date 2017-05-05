@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 
 import TetrisCore from '../../core'
-import tetrix from '../../core/tetrix'
+import board from '../../core/board'
 
 import GameBoard from '../GameBoard'
 
@@ -18,7 +18,7 @@ class Tetris extends Component {
     super()
     this.state = {
       score: 0,
-      shape: tetrix([]).raw()
+      shape: board().getVisual()
     }
   }
 

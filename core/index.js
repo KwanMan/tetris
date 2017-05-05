@@ -1,5 +1,4 @@
 import createStore from './store'
-import { add } from './tetrixUtils'
 
 export default function Tetris () {
   const store = createStore()
@@ -11,9 +10,9 @@ export default function Tetris () {
     const { board, liveTetrimino, score } = store.getState()
     let shape
     if (liveTetrimino) {
-      shape = add([board, liveTetrimino]).visual()
+      shape = board.add(liveTetrimino).getVisual()
     } else {
-      shape = board.visual()
+      shape = board.getVisual()
     }
 
     newShapeListeners.forEach(listener => listener(shape))

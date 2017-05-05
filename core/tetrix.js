@@ -1,44 +1,49 @@
-import { createArray } from '../utils'
-import { BOARD_HEIGHT, BOARD_WIDTH } from './constants'
+import { BOARD_WIDTH } from './constants'
 
-export default function tetrix (inputShape, { invert } = {}) {
-  const fullShape = getFullShape(inputShape)
-  const shape = invert ? flipVertical(fullShape) : fullShape
+export default function tetrix (coords, location, colour) {
+  const [ x, y ] = location
+  const real = coords.map(([ xOffset, yOffset ]) => [ x + xOffset, y + yOffset ])
 
-  const api = (y, x) => x !== undefined ? api.raw()[y][x] : api.raw()[y]
-
-  api.visual = () => flipVertical(api.raw())
-
-  api.raw = () => shape.map(row => row.slice(0))
-
-  api.clone = () => tetrix(api.raw())
-  api.map = fn => tetrix(loopAll(shape, 'map')(fn))
-  api.some = loopAll(shape, 'some')
-  api.every = loopAll(shape, 'every')
-  api.filterRows = fn => tetrix(shape.filter(fn))
-
-  return api
-}
-
-function loopAll (shape, method) {
-  return fn => shape[method]((row, y) => {
-    return row[method]((v, x) => {
-      return fn(v, {x, y})
-    })
-  })
-}
-
-function getFullShape (shape) {
-  let full = shape.slice(0)
-  while (full.length !== BOARD_HEIGHT) {
-    full.push(createArray(false, BOARD_WIDTH))
+  function transform (fn) {
+    const newCoords = coords.map(([ x, y ]) => fn(x, y))
+    return tetrix(newCoords, location, colour)
   }
-  return full
-}
 
-function flipVertical (input) {
-  return input.reduce((memo, next) => {
-    memo.unshift(next)
-    return memo
-  }, [])
+  function translate (fn) {
+    const [ x, y ] = location
+    return tetrix(coords, fn(x, y), colour)
+  }
+
+  return {
+    getCoords () {
+      return real.slice(0)
+    },
+    getColour () {
+      return colour
+    },
+    atBottom () {
+      return real.some(([ x, y ]) => y === 0)
+    },
+    atLeft () {
+      return real.some(([ x, y ]) => x === 0)
+    },
+    atRight () {
+      return real.some(([ x, y ]) => x === (BOARD_WIDTH - 1))
+    },
+    down () {
+      return translate((x, y) => [ x, y - 1 ])
+    },
+    left () {
+      return translate((x, y) => [ x - 1, y ])
+    },
+    right () {
+      return translate((x, y) => [ x + 1, y ])
+    },
+    clockwise () {
+      return transform((x, y) => [ y, -x ])
+    },
+    anticlockwise () {
+      return transform((x, y) => ([ -y, x ]))
+    }
+  }
 }

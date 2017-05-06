@@ -24,7 +24,6 @@ class Tetris extends Component {
 
   componentDidMount () {
     const tetris = TetrisCore()
-    tetris.onNewScore(score => this.setState({ score }))
     tetris.onNewShape(shape => this.setState({ shape }))
 
     document.onkeydown = function (e) {

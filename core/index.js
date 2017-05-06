@@ -1,34 +1,29 @@
-import createStore from './store'
-import { add } from './tetrixUtils'
+import createAtom from './atom'
 
 export default function Tetris () {
-  const store = createStore()
+  const atom = createAtom(onChange)
   const newShapeListeners = []
-  const newScoreListeners = []
   let interval
 
-  store.subscribe(() => {
-    const { board, liveTetrimino, score } = store.getState()
+  function onChange (state) {
+    const { board, liveTetrimino } = state
     let shape
     if (liveTetrimino) {
-      shape = add([board, liveTetrimino]).visual()
+      shape = board.add(liveTetrimino).getVisual()
     } else {
-      shape = board.visual()
+      shape = board.getVisual()
     }
 
     newShapeListeners.forEach(listener => listener(shape))
-    newScoreListeners.forEach(listener => listener(score))
-  })
+  }
 
   function userAction (action) {
-    store.dispatch({
-      type: 'USER_ACTION',
-      action
-    })
+    atom.emit(action)
   }
 
   function startGame () {
-    interval = setInterval(() => store.dispatch({ type: 'NEXT_TICK' }), 300)
+    setTimeout(() => atom.emit('NEXT_TICK'), 0)
+    interval = setInterval(() => atom.emit('NEXT_TICK'), 300)
   }
 
   function stopGame () {
@@ -38,7 +33,6 @@ export default function Tetris () {
 
   return {
     onNewShape: (listener) => newShapeListeners.push(listener),
-    onNewScore: (listener) => newScoreListeners.push(listener),
     userAction,
     startGame,
     stopGame

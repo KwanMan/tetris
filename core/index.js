@@ -20,10 +20,7 @@ export default function Tetris () {
   }
 
   function userAction (action) {
-    if (action === 'DROP') {
-      return atom.emit('DROP')
-    }
-    atom.emit(`MOVE_${action}`)
+    atom.emit(action)
   }
 
   function startGame () {

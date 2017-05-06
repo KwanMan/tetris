@@ -4,7 +4,7 @@ export default {
   NEXT_TICK (payload, { get, mutate, emit }) {
     const { liveTetrimino } = get()
     if (liveTetrimino) {
-      emit('MOVE_DOWN')
+      emit('DOWN')
     } else {
       emit('INTRODUCE_NEW')
     }
@@ -21,21 +21,28 @@ export default {
       })
     }
   },
-  MOVE_LEFT (payload, { get, mutate, emit }) {
+  ROTATE (payload, { get, mutate, emit }) {
+    const { board, liveTetrimino } = get()
+    if (!liveTetrimino) return
+    const next = liveTetrimino.clockwise()
+    if (next.outOfBounds() || board.clashesWith(next)) return
+    mutate({ liveTetrimino: next })
+  },
+  LEFT (payload, { get, mutate, emit }) {
     const { board, liveTetrimino } = get()
     if (!liveTetrimino) return
     const next = liveTetrimino.left()
     if (liveTetrimino.atLeft() || board.clashesWith(next)) return
     mutate({ liveTetrimino: next })
   },
-  MOVE_RIGHT (payload, { get, mutate, emit }) {
+  RIGHT (payload, { get, mutate, emit }) {
     const { board, liveTetrimino } = get()
     if (!liveTetrimino) return
     const next = liveTetrimino.right()
     if (liveTetrimino.atRight() || board.clashesWith(next)) return
     mutate({ liveTetrimino: next })
   },
-  MOVE_DOWN (payload, { get, mutate, emit }) {
+  DOWN (payload, { get, mutate, emit }) {
     const { board, liveTetrimino } = get()
     if (!liveTetrimino) return
     const next = liveTetrimino.down()

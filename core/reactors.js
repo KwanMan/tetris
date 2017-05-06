@@ -72,7 +72,6 @@ export default {
     emit('SETTLED')
   },
   SETTLED (payload, { get, mutate, emit }) {
-    return
     const { board } = get()
     mutate({
       board: board.removeCompleted()

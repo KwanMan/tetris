@@ -12,6 +12,7 @@ export default function Tetris (userSettings) {
     ...userSettings
   }
   let score = 0
+  let linesRemoved = 0
   const tetris = TetrisCore({
     onNewShape: settings.onNewShape,
     onLose: settings.onLose,
@@ -20,7 +21,8 @@ export default function Tetris (userSettings) {
       score += (lines * 100)
       if (lines === 4) score += 100
       settings.onNewScore(score)
-      settings.tick = settings.tick - (lines * 5)
+      linesRemoved += lines
+      tetris.setTick(settings.tick - (5 * linesRemoved))
     }
   })
 

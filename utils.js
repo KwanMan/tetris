@@ -12,3 +12,12 @@ export function pickRandom (array) {
   const int = Math.floor(Math.random() * array.length)
   return array[int]
 }
+
+export function once (fn, message) {
+  let called = false
+  return (...args) => {
+    if (called) throw new Error(message)
+    called = true
+    return fn(...args)
+  }
+}

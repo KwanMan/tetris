@@ -45,9 +45,7 @@ export default function Tetris (userSettings) {
 function createActions (atom) {
   const actions = ['rotate', 'left', 'right', 'down', 'drop']
   return actions.reduce((memo, action) => {
-    return {
-      ...memo,
-      [action] () { atom.emit(action.toUpperCase()) }
-    }
+    memo[action] = () => { atom.emit(action.toUpperCase()) }
+    return memo
   }, {})
 }

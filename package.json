@@ -10,7 +10,10 @@
   "author": "KwanFlakes",
   "license": "ISC",
   "devDependencies": {
-    "standard": "^8.6.0"
+    "buble": "^0.15.2",
+    "buble-loader": "^0.4.1",
+    "standard": "^8.6.0",
+    "webpack": "^2.5.1"
   },
   "dependencies": {
     "classnames": "^2.2.5",

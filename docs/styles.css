@@ -1,0 +1,51 @@
+html {
+  height: 100%;
+}
+
+body {
+  background-image: url('./bg.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+.Layout-board {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+}
+
+.Layout-score {
+  color: white;
+  font-family: arial;
+  font-size: 72px;
+  position: absolute;
+  top: 50px;
+  left: 50%;
+  margin-left: -260px;
+}
+
+.GameBoard {
+  width: 400px;
+  height: 800px;
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.GameRow {
+  display: flex;
+  height: 40px;
+  width: 100%;
+}
+
+.Tetrimino {
+  margin: 2px;
+  width: 36px;
+  height: 36px;
+  box-sizing: border-box;
+}
+
+.Tetrimino--active {
+  background-color: white;
+  box-shadow: inset 0px 0px 5px 0px rgba(0,0,0,0.75);
+}

@@ -1,52 +1,51 @@
+html {
+  height: 100%;
+}
+
+body {
+  background-image: url('./bg.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+.Layout-board {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+}
+
+.Layout-score {
+  color: white;
+  font-family: arial;
+  font-size: 72px;
+  position: absolute;
+  top: 50px;
+  left: 50%;
+  margin-left: -260px;
+}
+
 .GameBoard {
-  border: 1px solid black;
-  width: 300px;
-  height: 750px;
+  width: 400px;
+  height: 800px;
   display: flex;
   flex-direction: column;
-  margin: 20px auto;
+  background-color: rgba(0, 0, 0, 0.4);
 }
 
 .GameRow {
   display: flex;
-  height: 25px;
-  width: 300px;
+  height: 40px;
+  width: 100%;
 }
 
 .Tetrimino {
-  width: 25px;
-  height: 25px;
+  margin: 2px;
+  width: 36px;
+  height: 36px;
   box-sizing: border-box;
 }
 
 .Tetrimino--active {
-  border: 1px solid black;
-}
-
-.Tetrimino--red {
-  background-color: red;
-}
-
-.Tetrimino--green {
-  background-color: green;
-}
-
-.Tetrimino--blue {
-  background-color: blue;
-}
-
-.Tetrimino--yellow {
-  background-color: yellow;
-}
-
-.Tetrimino--orange {
-  background-color: orange;
-}
-
-.Tetrimino--grey {
-  background-color: grey;
-}
-
-.Tetrimino--pink {
-  background-color: pink;
+  background-color: white;
+  box-shadow: inset 0px 0px 5px 0px rgba(0,0,0,0.75);
 }

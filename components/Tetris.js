@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 
-import TetrisCore from '../../core/simpleMode'
-import board from '../../core/board'
+import TetrisCore from '../core/simpleMode'
+import board from '../core/board'
 
-import GameBoard from '../GameBoard'
+import Layout from './Layout'
 
 const actions = {
   32: 'drop', // Space
@@ -49,10 +49,7 @@ class Tetris extends Component {
   render () {
     const { shape, score } = this.state
     return (
-      <div>
-        <GameBoard rows={shape} />
-        <div>{`score is ${score}`}</div>
-      </div>
+      <Layout rows={shape} score={score} />
     )
   }
 }

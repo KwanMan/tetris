@@ -24,16 +24,18 @@ export default function board (grid = {}) {
 
   function removeCompleted () {
     let newBoard = board(Object.assign({}, grid))
+    let removed = 0
     forEach(4, count => {
       forEach(BOARD_HEIGHT, y => {
         const full = every(BOARD_WIDTH, x => newBoard.get(x, y))
         if (full) {
+          removed++
           newBoard = newBoard.deleteRow(y)
           return false
         }
       })
     })
-    return newBoard
+    return { board: newBoard, removed }
   }
 
   function getVisual () {

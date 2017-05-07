@@ -1,16 +1,16 @@
 import React, { Component } from 'react'
 
-import TetrisCore from '../../core'
+import TetrisCore from '../../core/simpleMode'
 import board from '../../core/board'
 
 import GameBoard from '../GameBoard'
 
-const keys = {
-  32: 'DROP', // Space
-  37: 'LEFT',
-  38: 'ROTATE', // Up arrow
-  39: 'RIGHT',
-  40: 'DOWN'
+const actions = {
+  32: 'drop', // Space
+  37: 'left', // Left arrow
+  38: 'rotate', // Up arrow
+  39: 'right', // Right arrow
+  40: 'down' // Down arrow
 }
 
 class Tetris extends Component {
@@ -23,14 +23,18 @@ class Tetris extends Component {
   }
 
   componentDidMount () {
-    const tetris = TetrisCore()
-    tetris.onNewShape(shape => this.setState({ shape }))
+    const self = this
+    const tetris = TetrisCore({
+      onNewShape (shape) { self.setState({ shape }) },
+      onNewScore (score) { self.setState({ score }) }
+    })
 
     document.onkeydown = function (e) {
       const code = e.keyCode
-      if (keys[code]) {
+      const action = actions[code]
+      if (action) {
         e.preventDefault()
-        tetris.userAction(keys[code])
+        tetris.sendAction[action]()
       }
     }
 
@@ -43,9 +47,12 @@ class Tetris extends Component {
   }
 
   render () {
-    const { shape } = this.state
+    const { shape, score } = this.state
     return (
-      <GameBoard rows={shape} />
+      <div>
+        <GameBoard rows={shape} />
+        <div>{`score is ${score}`}</div>
+      </div>
     )
   }
 }

@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
+import classnames from 'classnames'
 
 import GameRow from './GameRow'
 
 class GameBoard extends Component {
   render () {
+    const className = classnames('GameBoard', this.props.className)
     return (
-      <div className='GameBoard'>
+      <div className={className}>
         {this.renderRows()}
       </div>
     )

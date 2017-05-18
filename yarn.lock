@@ -2310,9 +2310,9 @@ levn@^0.3.0, levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
-little-atom@kwanman/little-atom:
-  version "0.1.0"
-  resolved "https://codeload.github.com/kwanman/little-atom/tar.gz/2e967bc827a9c301ca524c74eea074bd0a922934"
+little-atom@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/little-atom/-/little-atom-0.2.0.tgz#da5315b521e4600257dc5c591ef64da2901eb072"
 
 load-json-file@^1.0.0:
   version "1.1.0"

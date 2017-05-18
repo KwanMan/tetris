@@ -1,12 +1,12 @@
 import createAtom from 'little-atom'
 import createBoard from './board'
-import createReactors from './reactors'
+import createActions from './actions'
 
 export default function atom ({ onNewShape, onLinesRemoved, onLose }) {
   return createAtom({
     board: createBoard(),
     liveTetrimino: false
-  }, createReactors({
+  }, createActions({
     onLinesRemoved,
     onLose
   }), onMutation)

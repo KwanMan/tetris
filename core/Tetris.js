@@ -29,7 +29,7 @@ export default function Tetris (userSettings) {
 
   function next () {
     if (finished) return
-    atom.emit('NEXT_TICK')
+    atom.actions.nextTick()
     setTimeout(next, settings.tick)
   }
 
@@ -45,7 +45,7 @@ export default function Tetris (userSettings) {
 function createActions (atom) {
   const actions = ['rotate', 'left', 'right', 'down', 'drop']
   return actions.reduce((memo, action) => {
-    memo[action] = () => { atom.emit(action.toUpperCase()) }
+    memo[action] = () => { atom.actions[action]() }
     return memo
   }, {})
 }

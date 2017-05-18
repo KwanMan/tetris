@@ -2,15 +2,15 @@ import { getRandom } from './tetriminos'
 
 export default function createReactors ({ onLinesRemoved, onLose }) {
   return {
-    NEXT_TICK (payload, { get, mutate, emit }) {
+    nextTick ({ get, actions }) {
       const { liveTetrimino } = get()
       if (liveTetrimino) {
-        emit('DOWN')
+        actions.down()
       } else {
-        emit('INTRODUCE_NEW')
+        actions.introduceNew()
       }
     },
-    INTRODUCE_NEW (payload, { get, mutate, emit }) {
+    introduceNew ({ get, mutate }) {
       const { board } = get()
       const newTetrimino = getRandom()
       if (board.clashesWith(newTetrimino)) {
@@ -22,28 +22,28 @@ export default function createReactors ({ onLinesRemoved, onLose }) {
         })
       }
     },
-    ROTATE (payload, { get, mutate, emit }) {
+    rotate ({ get, mutate }) {
       const { board, liveTetrimino } = get()
       if (!liveTetrimino) return
       const next = liveTetrimino.clockwise()
       if (next.outOfBounds() || board.clashesWith(next)) return
       mutate({ liveTetrimino: next })
     },
-    LEFT (payload, { get, mutate, emit }) {
+    left ({ get, mutate }) {
       const { board, liveTetrimino } = get()
       if (!liveTetrimino) return
       const next = liveTetrimino.left()
       if (liveTetrimino.atLeft() || board.clashesWith(next)) return
       mutate({ liveTetrimino: next })
     },
-    RIGHT (payload, { get, mutate, emit }) {
+    right ({ get, mutate }) {
       const { board, liveTetrimino } = get()
       if (!liveTetrimino) return
       const next = liveTetrimino.right()
       if (liveTetrimino.atRight() || board.clashesWith(next)) return
       mutate({ liveTetrimino: next })
     },
-    DOWN (payload, { get, mutate, emit }) {
+    down ({ get, mutate, actions }) {
       const { board, liveTetrimino } = get()
       if (!liveTetrimino) return
       const next = liveTetrimino.down()
@@ -52,12 +52,12 @@ export default function createReactors ({ onLinesRemoved, onLose }) {
           board: board.add(liveTetrimino),
           liveTetrimino: false
         })
-        emit('SETTLED')
+        actions.settled()
       } else {
         mutate({ liveTetrimino: next })
       }
     },
-    DROP (payload, { get, mutate, emit }) {
+    drop ({ get, mutate, actions }) {
       const { board, liveTetrimino } = get()
       if (!liveTetrimino) return
       let current = liveTetrimino
@@ -70,9 +70,9 @@ export default function createReactors ({ onLinesRemoved, onLose }) {
         board: board.add(current),
         liveTetrimino: false
       })
-      emit('SETTLED')
+      actions.settled()
     },
-    SETTLED (payload, { get, mutate, emit }) {
+    settled ({ get, mutate }) {
       const { board } = get()
       const { board: newBoard, removed } = board.removeCompleted()
       if (removed) {

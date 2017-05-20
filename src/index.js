@@ -1,5 +1,15 @@
 import preact from 'preact'
 
-import Tetris from './components/Tetris'
+import Layout from './components/Layout'
+import createTetris from './createTetris'
 
-preact.render(<Tetris />, document.querySelector('.root'))
+const tetris = createTetris(render)
+
+const root = document.querySelector('.root')
+function render ({ score, shape }) {
+  preact.render(<Layout score={score} rows={shape} />, root, root.lastChild)
+}
+
+render({ score: 0 })
+
+tetris.startGame()

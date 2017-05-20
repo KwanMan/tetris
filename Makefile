@@ -1,8 +1,12 @@
-.PHONY: start docs
+BIN = ./node_modules/.bin
+
+.PHONY: dev build
 
 dev:
-	npm run dev
+	$(BIN)/jetpack
 
-docs:
-	cp -R static/. docs
-	cd docs && ../node_modules/.bin/webpack --config webpack.config.js
+build:
+	$(BIN)/jetpack build
+
+start:
+	$(BIN)/jetpack start

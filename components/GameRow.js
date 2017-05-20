@@ -1,4 +1,4 @@
-import React from 'react'
+import preact from 'preact'
 
 import Tetrimino from './Tetrimino'
 

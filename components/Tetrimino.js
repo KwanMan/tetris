@@ -1,4 +1,4 @@
-import React from 'react'
+import preact from 'preact'
 import classnames from 'classnames'
 
 const Tetrimino = ({ color }) => {

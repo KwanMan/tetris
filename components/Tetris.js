@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import preact, { Component } from 'preact'
 
 import TetrisCore from '../core/simpleMode'
 import board from '../core/board'

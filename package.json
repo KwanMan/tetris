@@ -1,26 +1,23 @@
 {
   "name": "tetris",
   "version": "0.0.1",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "next -p 1028"
-  },
+  "description": "Tetris in React",
+  "main": "src/index.js",
   "author": "KwanFlakes",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
-    "buble": "^0.15.2",
-    "buble-loader": "^0.4.1",
-    "standard": "^8.6.0",
-    "webpack": "^2.5.1"
+    "jetpack": "^0.3.0",
+    "standard": "^8.6.0"
   },
   "dependencies": {
     "classnames": "^2.2.5",
     "little-atom": "^0.2.0",
     "lodash": "^4.17.4",
-    "next": "^2.2.0",
-    "react": "^15.4.2",
-    "react-dom": "^15.4.2"
+    "preact": "^8.1.0"
+  },
+  "jetpack": {
+    "jsx": "preact.h",
+    "html": "./index.html",
+    "public": "static"
   }
 }

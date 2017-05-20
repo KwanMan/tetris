@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import preact, { Component } from 'preact'
 import classnames from 'classnames'
 
 import GameRow from './GameRow'
